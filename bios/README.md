@@ -24,6 +24,8 @@ The original chip is a TI TMS27C512 with AMI sticker `AC0410599`. It was read tw
 
 The filename is intentionally the same as the file published in the VOGONS Vintage Driver Library under the title **QDI V4P895P3 SMT v5 AMIBIOS WINBIOS**.
 
+Download source: [VOGONS Vintage Driver Library landing page](https://vogonsdrivers.com/getfile.php?fileid=1699&menustate=0). The page identifies the payload as `qdi_v4p895p3_smt_v5_bios.bin`, 65,536 bytes. VOGONS asks users to use the landing page rather than a transient direct-file URL.
+
 Internal Runtime identity:
 
 ```text
@@ -44,6 +46,11 @@ The ROM from QDI's `P895V14.ZIP`. The preserved QDI archive describes the packag
 V4P895/SMT BIOS version 1.4
 ```
 
+Download sources:
+
+- [direct `P895V14.ZIP`](https://ftpmirror.infania.net/sites/ct_treiber_service/treiber/qdi/bios/p895v14.zip)
+- [preserved QDI BIOS archive index](https://ftpmirror.infania.net/sites/ct_treiber_service/html/qdi/bios/files.htm)
+
 Internal Runtime identity:
 
 ```text
@@ -57,6 +64,8 @@ Internal POST ID:
 ```
 
 The `GRN` internal label differs from the `P3` label in the earlier builds, but the official package targets the V4P895/SMT family, its code is very closely related to the archived V5 image, and it is independently reported working on V4P895P3/SMT V5.0.
+
+The external sources above were reachable when checked on **2026-09-13**. Verify downloads against [`../CHECKSUMS.sha256`](../CHECKSUMS.sha256) before use.
 
 ## Checksums
 
