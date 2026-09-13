@@ -22,22 +22,28 @@ The underlying device was identified by programmer signature as a **Texas Instru
 
 | Repository file | Provenance | Internal runtime identity | Internal POST ID | SHA-256 |
 |---|---|---|---|---|
-| `bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin` | Two independent reads of the physical TMS27C512; bit-identical | `OPTi895P3 GREEN PC IVN5.0 7 Dec, 1994` | `40-2004-428003-00101111-072594-OPTI802` | `7874a75e23389c329917e1b50bfa531a4853829b821e4a6fec46430a06966097` |
-| `bios/archive/qdi_v4p895p3_smt_v5_bios.bin` | Existing VOGONS Vintage Driver Library image; filename preserved | `OPTi895P3 GREEN PC IVN5.2 27 May, 1995` | `40-2207-428003-00101111-072594-OPTI802` | `d188089f4f069b78027db0d180c046899d38fc29dca38813ad9c935a8c7d6b17` |
-| `bios/qdi-official/P895V14.ROM` | QDI `P895V14.ZIP`, described in the QDI archive as `V4P895/SMT BIOS version 1.4` | `OPTi895GRN GREEN IVN1.4 22, Nov, 1995` | `40-2214-428003-00101111-072594-OPTI802` | `64349df495153cdb4e88e8f1e042e61322d410c7167a7bd048d159adb22e2281` |
+| [`bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin`](bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin) | Two independent reads of the physical TMS27C512; bit-identical | `OPTi895P3 GREEN PC IVN5.0 7 Dec, 1994` | `40-2004-428003-00101111-072594-OPTI802` | `7874a75e23389c329917e1b50bfa531a4853829b821e4a6fec46430a06966097` |
+| [`bios/archive/qdi_v4p895p3_smt_v5_bios.bin`](bios/archive/qdi_v4p895p3_smt_v5_bios.bin) | Existing VOGONS Vintage Driver Library image; filename preserved | `OPTi895P3 GREEN PC IVN5.2 27 May, 1995` | `40-2207-428003-00101111-072594-OPTI802` | `d188089f4f069b78027db0d180c046899d38fc29dca38813ad9c935a8c7d6b17` |
+| [`bios/qdi-official/P895V14.ROM`](bios/qdi-official/P895V14.ROM) | QDI `P895V14.ZIP`, described in the QDI archive as `V4P895/SMT BIOS version 1.4` | `OPTi895GRN GREEN IVN1.4 22, Nov, 1995` | `40-2214-428003-00101111-072594-OPTI802` | `64349df495153cdb4e88e8f1e042e61322d410c7167a7bd048d159adb22e2281` |
 
 All three ROMs are **65,536 bytes** and use the AMI core dated **25 July 1994**. The later vendor builds retain that AMI core date while QDI/OPTi-specific code and data continue to evolve.
 
 The original board dump is **not** identical to either previously archived image.
 
+Each BIOS directory also contains a [`decomposed/`](bios/) set produced with AmiDeco 0.31e: the complete source image as `input.rom` plus `amibody.00`, `amibody.01`, and `amibody.02`. The canonical raw ROM file and the corresponding `decomposed/input.rom` are stored from the same Git blob, so they are byte-for-byte identical.
+
+### Original-dump preservation package
+
+The physical dump is additionally packaged as [`TMS27C512@DIP28-486-qdi-v4p895p3-smt-v5.zip`](bios/original/TMS27C512@DIP28-486-qdi-v4p895p3-smt-v5.zip) for submission to external preservation libraries. The package contains the verified original ROM dump together with a manifest documenting the board, EPROM device, acquisition method, firmware identity, and checksum.
+
 ### External download sources
 
-Until all three binary images are materialized in this repository, the two externally preserved ROMs can be obtained from their preservation sources:
+For independent copies and provenance of the two previously published images:
 
 - **VOGONS IVN5.2** — [VOGONS Vintage Driver Library landing page](https://vogonsdrivers.com/getfile.php?fileid=1699&menustate=0) for `qdi_v4p895p3_smt_v5_bios.bin`. VOGONS asks users to link/bookmark the landing page rather than a transient direct-file URL.
 - **QDI P895V14** — [direct `P895V14.ZIP` archive](https://ftpmirror.infania.net/sites/ct_treiber_service/treiber/qdi/bios/p895v14.zip); the [preserved QDI BIOS index](https://ftpmirror.infania.net/sites/ct_treiber_service/html/qdi/bios/files.htm) identifies it as `V4P895/SMT BIOS version 1.4`.
 
-Both sources were reachable when checked on **2026-09-13**. Verify the downloaded payload against the SHA-256 values above before use.
+Both external sources were reachable when checked on **2026-09-13**. Verify independently downloaded payloads against the SHA-256 values above before use.
 
 ## Main firmware finding
 
@@ -63,9 +69,16 @@ See **[docs/rom-chips.md](docs/rom-chips.md)** before substituting devices.
 
 ```text
 bios/
-  original/       verified physical dump
-  archive/        previously published community dump
-  qdi-official/   QDI P895V14 release ROM
+  original/
+    OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin
+    TMS27C512@DIP28-486-qdi-v4p895p3-smt-v5.zip
+    decomposed/{input.rom,amibody.00,amibody.01,amibody.02}
+  archive/
+    qdi_v4p895p3_smt_v5_bios.bin
+    decomposed/{input.rom,amibody.00,amibody.01,amibody.02}
+  qdi-official/
+    P895V14.ROM
+    decomposed/{input.rom,amibody.00,amibody.01,amibody.02}
 docs/
   bios-analysis.md
   board-identification.md
@@ -75,7 +88,7 @@ photos/
 CHECKSUMS.sha256
 ```
 
-The temporary analysis files produced by AmiDeco (`amibody.*`, shell reports, and grep output) are intentionally not stored. The relevant results are documented and the extraction procedure is reproducible.
+The binary AmiDeco extraction artifacts used by the analysis are preserved under the corresponding `bios/*/decomposed/` directories. Transient shell reports, grep output, and other scratch files are intentionally not stored; the relevant results are documented and the extraction procedure is reproducible.
 
 ## External preservation references
 
