@@ -30,6 +30,15 @@ All three ROMs are **65,536 bytes** and use the AMI core dated **25 July 1994**.
 
 The original board dump is **not** identical to either previously archived image.
 
+### External download sources
+
+Until all three binary images are materialized in this repository, the two externally preserved ROMs can be obtained from their preservation sources:
+
+- **VOGONS IVN5.2** — [VOGONS Vintage Driver Library landing page](https://vogonsdrivers.com/getfile.php?fileid=1699&menustate=0) for `qdi_v4p895p3_smt_v5_bios.bin`. VOGONS asks users to link/bookmark the landing page rather than a transient direct-file URL.
+- **QDI P895V14** — [direct `P895V14.ZIP` archive](https://ftpmirror.infania.net/sites/ct_treiber_service/treiber/qdi/bios/p895v14.zip); the [preserved QDI BIOS index](https://ftpmirror.infania.net/sites/ct_treiber_service/html/qdi/bios/files.htm) identifies it as `V4P895/SMT BIOS version 1.4`.
+
+Both sources were reachable when checked on **2026-09-13**. Verify the downloaded payload against the SHA-256 values above before use.
+
 ## Main firmware finding
 
 AmiDeco 0.31e recognizes all three files as **AMI'94** and extracts a three-section scheme: POST, Setup Server, and Runtime.
@@ -72,7 +81,9 @@ The temporary analysis files produced by AmiDeco (`amibody.*`, shell reports, an
 
 - VOGONS Vintage Driver Library, existing V5 image:
   https://vogonsdrivers.com/getfile.php?fileid=1699&menustate=0
-- QDI BIOS archive mirror (`P895V14.ZIP` = `V4P895/SMT BIOS version 1.4`):
+- QDI BIOS archive mirror, direct package (`P895V14.ZIP` = `V4P895/SMT BIOS version 1.4`):
+  https://ftpmirror.infania.net/sites/ct_treiber_service/treiber/qdi/bios/p895v14.zip
+- QDI BIOS archive index:
   https://ftpmirror.infania.net/sites/ct_treiber_service/html/qdi/bios/files.htm
 - VOGONS thread documenting P895V14 on V4P895P3/SMT V5.0 with AMD 5x86-133:
   https://www.vogons.org/viewtopic.php?t=74403
