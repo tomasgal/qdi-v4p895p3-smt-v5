@@ -59,6 +59,16 @@ All three contain the AMI core date `07/25/94`. This is the AMI core date, not t
 
 The byte sizes of the preserved `amibody.*` files in the repository match the sizes above.
 
+### Direct module comparison
+
+A direct binary comparison confirms that **every extracted module differs in every firmware pair**:
+
+- Physical IVN5.0 vs QDI P895V14: `.00`, `.01`, and `.02` all differ;
+- Physical IVN5.0 vs VOGONS IVN5.2: `.00`, `.01`, and `.02` all differ;
+- QDI P895V14 vs VOGONS IVN5.2: `.00`, `.01`, and `.02` all differ.
+
+This is consistent with the distinct hashes above. It does not imply that the modules are wholly unrelated; the sequence-aware comparison below shows that some pairs are in fact extremely close.
+
 ## Sequence-aware similarity
 
 A simple byte-at-the-same-offset comparison is misleading when a module contains inserted or removed data, because every following byte shifts. A Python `difflib.SequenceMatcher` comparison was therefore also used.
@@ -104,12 +114,11 @@ No explicit `5x86` or `5x86-P75` name is present.
 
 ### VOGONS IVN5.2
 
-Compared with the physical dump, this build adds evidence of AMD-specific identification:
+Compared with the physical dump, this build adds evidence of AMD-specific identification. Its Setup Server contains `486DX4-Plus`, and also a longer printable sequence ending in `Am486DX4`:
 
 ```text
-Am486DX4
+!(2?KSdAm486DX4 
 486DX4-Plus
-AuthenticAMD
 ```
 
 Runtime contains both:
@@ -142,6 +151,109 @@ cAMDu
 ```
 
 These short mixed code/string sequences should not be interpreted as user-visible text, but their presence near the CPU changes is consistent with altered CPU-detection logic.
+
+### Generic AMI CPU-name table and deltas
+
+The broad AMI identification table in the physical IVN5.0 image contains names such as:
+
+```text
+486DLC
+486DLC-U
+486DLC2-U
+486DLCe
+486DX
+486DX-S
+486DX2
+486DX2-S
+486DX2Plus
+486DX4
+486DXL
+486DXL2
+486DXLV
+486DXLV2
+486DXPlus
+486S-A
+486S-B
+486S2
+486S2e
+486SL
+486SLC
+486SLC-U
+486SLC2-U
+486SLCe
+486SX
+486SX-S
+486SX2-S
+486SXL
+486SXL2
+486SXLV
+486SXLV2
+486SXPlus
+486Se
+```
+
+The later images retain most of the generic 486 family names but change the table. In particular:
+
+- VOGONS IVN5.2 and QDI P895V14 contain `486DX2-Plus` and `486DX4-Plus` strings not present in the physical IVN5.0 string list;
+- the physical IVN5.0 list contains `486DXLV`, `486DXLV2`, `486SXLV`, and `486SXLV2`, which were not found in the corresponding later-image string lists;
+- QDI P895V14 adds the explicit `5x86` and `5x86-P75` names.
+
+These are string-table differences only; presence or absence of a label is not by itself proof that the corresponding CPU path is functional or absent.
+
+### CPU-related string locations by module
+
+The following offsets are **decimal byte offsets inside the extracted `amibody.*` files**, as reported by `strings -a -td` with the CPU-oriented filter documented in [`reproducing-analysis.md`](reproducing-analysis.md).
+
+No matching CPU-oriented strings were found in `amibody.00` for any of the three images with that filter. The relevant matches are concentrated in `.01`, with vendor-identification strings also appearing in `.02`.
+
+#### Physical IVN5.0
+
+| Module | Offset | String |
+|---|---:|---|
+| `.01` | 16682 | `P24D` |
+| `.01` | 16687 | `486DX4` |
+| `.01` | 16717 | `P24T` |
+| `.01` | 17019 | `486DX4` |
+| `.01` | 17055 | `Main Processor` |
+| `.01` | 17960 | `MHz CPU Clock` |
+| `.02` | 10727 | `CyrixInstead` |
+
+#### QDI P895V14
+
+| Module | Offset | String |
+|---|---:|---|
+| `.01` | 7274 | `Am486DX4 ` |
+| `.01` | 8101 | `f=5x86XuF` |
+| `.01` | 8295 | `f=P24Tu` |
+| `.01` | 17074 | `P24D` |
+| `.01` | 17079 | `486DX4` |
+| `.01` | 17109 | `P24T` |
+| `.01` | 17273 | `486DX4` |
+| `.01` | 17280 | `5x86` |
+| `.01` | 17382 | `486DX4-Plus` |
+| `.01` | 17394 | `486DX4-Plus` |
+| `.01` | 17437 | `5x86-P75` |
+| `.01` | 17475 | `Main Processor` |
+| `.01` | 18380 | `MHz CPU Clock` |
+| `.02` | 10727 | `CyrixInstead` |
+| `.02` | 10740 | `AuthenticAMD` |
+
+#### VOGONS IVN5.2
+
+| Module | Offset | String |
+|---|---:|---|
+| `.01` | 7229 | `!(2?KSdAm486DX4 ` |
+| `.01` | 8134 | `f=P24Tu` |
+| `.01` | 16830 | `P24D` |
+| `.01` | 16835 | `486DX4` |
+| `.01` | 16865 | `P24T` |
+| `.01` | 17126 | `486DX4-Plus` |
+| `.01` | 17209 | `Main Processor` |
+| `.01` | 18114 | `MHz CPU Clock` |
+| `.02` | 10727 | `CyrixInstead` |
+| `.02` | 10740 | `AuthenticAMD` |
+
+The identical `.02` offsets of `CyrixInstead` and `AuthenticAMD` in the two later images are useful structural evidence that this part of their Runtime CPU-vendor identification data shares a common layout. That observation is consistent with, but does not by itself prove, shared implementation logic.
 
 ### Interpretation
 
