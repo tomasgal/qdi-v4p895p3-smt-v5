@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Reconstruct verified ROM images
+      - name: Reconstruct and retrieve verified ROM images
         shell: bash
         run: |
           set -euo pipefail
@@ -25,19 +25,54 @@ jobs:
             exit 0
           fi
 
-          mkdir -p bios/original bios/archive bios/qdi-official
+          mkdir -p bios/original bios/archive bios/qdi-official /tmp/qdi-bios
 
+          # Unique physical dump preserved in this repository as staged base64 parts.
           cat .bios-source/original.part*.b64 \
             | base64 --decode \
             > bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin
 
-          cat .bios-source/vogons.part*.b64 \
-            | base64 --decode \
-            > bios/archive/qdi_v4p895p3_smt_v5_bios.bin
+          extract_matching_file() {
+            local downloaded="$1"
+            local expected="$2"
+            local output="$3"
 
-          cat .bios-source/p895v14.part*.b64 \
-            | base64 --decode \
-            > bios/qdi-official/P895V14.ROM
+            if printf '%s  %s\n' "$expected" "$downloaded" | sha256sum --check --status; then
+              cp "$downloaded" "$output"
+              return 0
+            fi
+
+            if unzip -t "$downloaded" >/dev/null 2>&1; then
+              while IFS= read -r entry; do
+                unzip -p "$downloaded" "$entry" > /tmp/qdi-bios/candidate || continue
+                if printf '%s  %s\n' "$expected" /tmp/qdi-bios/candidate | sha256sum --check --status; then
+                  cp /tmp/qdi-bios/candidate "$output"
+                  return 0
+                fi
+              done < <(unzip -Z1 "$downloaded")
+            fi
+
+            echo "No payload with expected SHA-256 $expected found in $downloaded" >&2
+            return 1
+          }
+
+          # Existing VOGONS Vintage Driver Library image.
+          curl --fail --location --retry 3 \
+            'https://vogonsdrivers.com/getfile.php?fileid=1699&menustate=0' \
+            --output /tmp/qdi-bios/vogons-download
+          extract_matching_file \
+            /tmp/qdi-bios/vogons-download \
+            d188089f4f069b78027db0d180c046899d38fc29dca38813ad9c935a8c7d6b17 \
+            bios/archive/qdi_v4p895p3_smt_v5_bios.bin
+
+          # QDI archive package P895V14.ZIP.
+          curl --fail --location --retry 3 \
+            'https://ftpmirror.infania.net/sites/ct_treiber_service/treiber/qdi/bios/p895v14.zip' \
+            --output /tmp/qdi-bios/p895v14.zip
+          extract_matching_file \
+            /tmp/qdi-bios/p895v14.zip \
+            64349df495153cdb4e88e8f1e042e61322d410c7167a7bd048d159adb22e2281 \
+            bios/qdi-official/P895V14.ROM
 
           sha256sum --check CHECKSUMS.sha256
 
