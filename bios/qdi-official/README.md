@@ -1,8 +1,8 @@
 # QDI official BIOS image
 
-Expected ROM file in this directory:
+Canonical ROM image:
 
-`P895V14.ROM`
+[`P895V14.ROM`](P895V14.ROM)
 
 - Source: QDI `P895V14.ZIP`
 - Archive description: `V4P895/SMT BIOS version 1.4`
@@ -13,6 +13,17 @@ Expected ROM file in this directory:
 - Direct archive: https://ftpmirror.infania.net/sites/ct_treiber_service/treiber/qdi/bios/p895v14.zip
 - Preserved QDI BIOS index: https://ftpmirror.infania.net/sites/ct_treiber_service/html/qdi/bios/files.htm
 
-Verify the extracted ROM against the SHA-256 above before use.
+The `GRN` internal label differs from the `P3` label in the earlier builds, but the official package targets the V4P895/SMT family, its code is very closely related to the archived V5 image, and it is independently reported working on V4P895P3/SMT V5.0.
 
-See [`../README.md`](../README.md) and [`../../docs/bios-analysis.md`](../../docs/bios-analysis.md) for provenance and analysis.
+Verify independently downloaded copies against the SHA-256 above before use.
+
+## AmiDeco decomposition
+
+[`decomposed/`](decomposed/) contains:
+
+- `input.rom` — complete 65,536-byte input image, stored from the same Git blob as the canonical `P895V14.ROM` above;
+- `amibody.00` — POST / setup-definition area;
+- `amibody.01` — Setup Server / configuration-reporting and CPU-identification area;
+- `amibody.02` — Runtime.
+
+See [`../README.md`](../README.md), [`../../docs/bios-analysis.md`](../../docs/bios-analysis.md), and [`../../docs/reproducing-analysis.md`](../../docs/reproducing-analysis.md) for provenance, analysis, and reproduction steps.
