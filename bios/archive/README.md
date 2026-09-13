@@ -1,8 +1,8 @@
 # Archived community BIOS image
 
-Expected ROM file in this directory:
+Canonical ROM image:
 
-`qdi_v4p895p3_smt_v5_bios.bin`
+[`qdi_v4p895p3_smt_v5_bios.bin`](qdi_v4p895p3_smt_v5_bios.bin)
 
 - Source: VOGONS Vintage Driver Library
 - Size: 65,536 bytes
@@ -11,6 +11,15 @@ Expected ROM file in this directory:
 - POST ID: `40-2207-428003-00101111-072594-OPTI802`
 - Download: https://vogonsdrivers.com/getfile.php?fileid=1699&menustate=0
 
-Verify the downloaded payload against the SHA-256 above before use.
+The repository copy preserves the filename used by the VOGONS Vintage Driver Library. Verify independently downloaded copies against the SHA-256 above before use.
 
-See [`../README.md`](../README.md) and [`../../docs/bios-analysis.md`](../../docs/bios-analysis.md) for provenance and analysis.
+## AmiDeco decomposition
+
+[`decomposed/`](decomposed/) contains:
+
+- `input.rom` — complete 65,536-byte input image, stored from the same Git blob as the canonical `.bin` above;
+- `amibody.00` — POST / setup-definition area;
+- `amibody.01` — Setup Server / configuration-reporting and CPU-identification area;
+- `amibody.02` — Runtime.
+
+See [`../README.md`](../README.md), [`../../docs/bios-analysis.md`](../../docs/bios-analysis.md), and [`../../docs/reproducing-analysis.md`](../../docs/reproducing-analysis.md) for provenance, analysis, and reproduction steps.
