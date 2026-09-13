@@ -1,6 +1,21 @@
 # BIOS files
 
-This directory contains the three 64 KiB ROM images used in the comparison.
+This directory is organized by provenance so the three 64 KiB ROM images can be preserved and verified independently:
+
+```text
+bios/
+├── original/
+│   ├── README.md
+│   └── OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin
+├── archive/
+│   ├── README.md
+│   └── qdi_v4p895p3_smt_v5_bios.bin
+└── qdi-official/
+    ├── README.md
+    └── P895V14.ROM
+```
+
+The binary files are not all materialized in the repository yet; each subdirectory README records the expected filename, provenance, size, checksum, and download source where applicable.
 
 ## Canonical names used here
 
