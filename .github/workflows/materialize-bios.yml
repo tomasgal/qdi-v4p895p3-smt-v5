@@ -3,7 +3,7 @@ name: Materialize preserved BIOS images
 on:
   push:
     paths:
-      - '.bios-source/**'
+      - '.bios-source/READY'
       - '.github/workflows/materialize-bios.yml'
 
 permissions:
@@ -13,7 +13,7 @@ jobs:
   materialize:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Reconstruct and retrieve verified ROM images
         shell: bash
@@ -21,16 +21,32 @@ jobs:
           set -euo pipefail
 
           if [[ ! -f .bios-source/READY ]]; then
-            echo 'Waiting for READY marker.'
+            echo 'READY marker absent; nothing to materialize.'
             exit 0
           fi
 
           mkdir -p bios/original bios/archive bios/qdi-official /tmp/qdi-bios
 
-          # Unique physical dump preserved in this repository as staged base64 parts.
-          cat .bios-source/original.part*.b64 \
-            | base64 --decode \
-            > bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin
+          # Unique physical dump preserved in this repository as staged base64 chunks.
+          # Chunks are numbered with a fixed-width suffix and concatenated in lexical order.
+          python3 - <<'PY'
+          import base64
+          from pathlib import Path
+
+          parts = sorted(Path('.bios-source').glob('origchunk.*.b64'))
+          if not parts:
+              raise SystemExit('No origchunk.*.b64 files found')
+          encoded = ''.join(p.read_text(encoding='ascii') for p in parts)
+          raw = base64.b64decode(encoded, validate=False)
+          out = Path('bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin')
+          out.write_bytes(raw)
+          print(f'Reconstructed {out}: {len(raw)} bytes from {len(parts)} chunks')
+          PY
+
+          printf '%s  %s\n' \
+            7874a75e23389c329917e1b50bfa531a4853829b821e4a6fec46430a06966097 \
+            bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin \
+            | sha256sum --check
 
           extract_matching_file() {
             local downloaded="$1"
