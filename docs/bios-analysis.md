@@ -25,15 +25,21 @@ AmiDeco extracted three files named `amibody.00`, `amibody.01`, and `amibody.02`
 - `.01` — Setup Server / configuration-reporting and CPU-identification area
 - `.02` — Runtime
 
-The temporary extracted files are not stored in the repository; hashes and reproducible extraction commands are provided below.
+The exact extraction artifacts used for this analysis are preserved in the repository together with the complete AmiDeco input image:
+
+- [physical IVN5.0 decomposition](../bios/original/decomposed/)
+- [VOGONS IVN5.2 decomposition](../bios/archive/decomposed/)
+- [QDI P895V14 decomposition](../bios/qdi-official/decomposed/)
+
+Each `decomposed/input.rom` is stored from the same Git blob as its canonical raw BIOS file and is therefore byte-for-byte identical to it. Reproducible extraction commands are provided in [`reproducing-analysis.md`](reproducing-analysis.md).
 
 ## Image identities
 
 | Name in this repository | Raw size | Raw SHA-256 | Vendor Runtime string |
 |---|---:|---|---|
-| `OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin` | 65,536 | `7874a75e23389c329917e1b50bfa531a4853829b821e4a6fec46430a06966097` | `OPTi895P3 GREEN PC IVN5.0 7 Dec, 1994` |
-| `qdi_v4p895p3_smt_v5_bios.bin` | 65,536 | `d188089f4f069b78027db0d180c046899d38fc29dca38813ad9c935a8c7d6b17` | `OPTi895P3 GREEN PC IVN5.2 27 May, 1995` |
-| `P895V14.ROM` | 65,536 | `64349df495153cdb4e88e8f1e042e61322d410c7167a7bd048d159adb22e2281` | `OPTi895GRN GREEN IVN1.4 22, Nov, 1995` |
+| [`OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin`](../bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin) | 65,536 | `7874a75e23389c329917e1b50bfa531a4853829b821e4a6fec46430a06966097` | `OPTi895P3 GREEN PC IVN5.0 7 Dec, 1994` |
+| [`qdi_v4p895p3_smt_v5_bios.bin`](../bios/archive/qdi_v4p895p3_smt_v5_bios.bin) | 65,536 | `d188089f4f069b78027db0d180c046899d38fc29dca38813ad9c935a8c7d6b17` | `OPTi895P3 GREEN PC IVN5.2 27 May, 1995` |
+| [`P895V14.ROM`](../bios/qdi-official/P895V14.ROM) | 65,536 | `64349df495153cdb4e88e8f1e042e61322d410c7167a7bd048d159adb22e2281` | `OPTi895GRN GREEN IVN1.4 22, Nov, 1995` |
 
 All three contain the AMI core date `07/25/94`. This is the AMI core date, not the final QDI vendor-build date.
 
@@ -50,6 +56,8 @@ All three contain the AMI core date `07/25/94`. This is the AMI core date, not t
 | QDI P895V14 | `.00` | 26,166 | `c9c7bf9011f620def301a43c53b4941cccae40ae46d7b7b8dcabb53fdcd46098` |
 | QDI P895V14 | `.01` | 18,394 | `a0a47d40b6be1ed507bd1cbab6acfd38cab6bb0c815f7fb4354723693312b7e1` |
 | QDI P895V14 | `.02` | 32,768 | `1176b3eca822926ee3fba4400f6a4751674f74b77990a44c9622b5088310831e` |
+
+The byte sizes of the preserved `amibody.*` files in the repository match the sizes above.
 
 ## Sequence-aware similarity
 
