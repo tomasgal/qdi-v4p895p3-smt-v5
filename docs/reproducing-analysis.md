@@ -2,6 +2,14 @@
 
 The analysis was performed under Linux/WSL using **AmiDeco 0.31e** plus standard Unix tools and Python 3.
 
+The repository already preserves the exact decomposition artifacts used for the documented comparison under:
+
+- [`bios/original/decomposed/`](../bios/original/decomposed/)
+- [`bios/archive/decomposed/`](../bios/archive/decomposed/)
+- [`bios/qdi-official/decomposed/`](../bios/qdi-official/decomposed/)
+
+Each preserved `input.rom` is the same Git blob as the corresponding canonical raw BIOS image. The commands below therefore reproduce the stored artifacts from the canonical files.
+
 ## 1. List the BIOS structure
 
 ```bash
@@ -23,6 +31,8 @@ cp bios/qdi-official/P895V14.ROM analysis/p895v14/input.rom
 (cd analysis/vogons  && amideco input.rom -x)
 (cd analysis/p895v14 && amideco input.rom -x)
 ```
+
+The resulting `input.rom`, `amibody.00`, `amibody.01`, and `amibody.02` can be compared directly with the corresponding files under `bios/*/decomposed/`.
 
 ## 3. Inspect CPU-related strings by module
 
@@ -95,4 +105,10 @@ Expected SHA-256 for the preserved original:
 
 ```text
 7874a75e23389c329917e1b50bfa531a4853829b821e4a6fec46430a06966097
+```
+
+For the repository copies, verify all three canonical images with:
+
+```bash
+sha256sum --check CHECKSUMS.sha256
 ```
