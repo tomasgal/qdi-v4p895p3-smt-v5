@@ -20,33 +20,22 @@ jobs:
         run: |
           set -euo pipefail
 
-          required=(
-            .bios-source/original.part1.b64
-            .bios-source/original.part2.b64
-            .bios-source/vogons.part1.b64
-            .bios-source/vogons.part2.b64
-            .bios-source/p895v14.part1.b64
-            .bios-source/p895v14.part2.b64
-          )
-
-          for f in "${required[@]}"; do
-            if [[ ! -f "$f" ]]; then
-              echo "Waiting for all source parts; missing $f"
-              exit 0
-            fi
-          done
+          if [[ ! -f .bios-source/READY ]]; then
+            echo 'Waiting for READY marker.'
+            exit 0
+          fi
 
           mkdir -p bios/original bios/archive bios/qdi-official
 
-          cat .bios-source/original.part1.b64 .bios-source/original.part2.b64 \
+          cat .bios-source/original.part*.b64 \
             | base64 --decode \
             > bios/original/OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin
 
-          cat .bios-source/vogons.part1.b64 .bios-source/vogons.part2.b64 \
+          cat .bios-source/vogons.part*.b64 \
             | base64 --decode \
             > bios/archive/qdi_v4p895p3_smt_v5_bios.bin
 
-          cat .bios-source/p895v14.part1.b64 .bios-source/p895v14.part2.b64 \
+          cat .bios-source/p895v14.part*.b64 \
             | base64 --decode \
             > bios/qdi-official/P895V14.ROM
 
