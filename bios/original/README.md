@@ -1,8 +1,8 @@
 # Original physical BIOS dump
 
-Expected ROM file in this directory:
+Canonical ROM image:
 
-`OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin`
+[`OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin`](OPTi895P3_GREEN_PC_IVN5.0_1994-12-07.bin)
 
 - Source: physical BIOS ROM from the documented QDI V4P895P3/SMT V5.0 motherboard
 - Device: Texas Instruments TMS27C512, DIP-28, 64 KiB
@@ -12,4 +12,17 @@ Expected ROM file in this directory:
 - Runtime identity: `OPTi895P3 GREEN PC IVN5.0 7 Dec, 1994`
 - POST ID: `40-2004-428003-00101111-072594-OPTI802`
 
-See [`../README.md`](../README.md) and [`../../docs/bios-analysis.md`](../../docs/bios-analysis.md) for provenance and analysis.
+## Preservation package
+
+[`TMS27C512@DIP28-486-qdi-v4p895p3-smt-v5.zip`](TMS27C512@DIP28-486-qdi-v4p895p3-smt-v5.zip) is the package prepared for external BIOS-preservation libraries. It contains the verified physical ROM dump together with a manifest documenting the motherboard, EPROM, acquisition method, firmware identity, and checksum.
+
+## AmiDeco decomposition
+
+[`decomposed/`](decomposed/) contains:
+
+- `input.rom` — complete 65,536-byte input image, stored from the same Git blob as the canonical `.bin` above;
+- `amibody.00` — POST / setup-definition area;
+- `amibody.01` — Setup Server / configuration-reporting and CPU-identification area;
+- `amibody.02` — Runtime.
+
+See [`../README.md`](../README.md), [`../../docs/bios-analysis.md`](../../docs/bios-analysis.md), and [`../../docs/reproducing-analysis.md`](../../docs/reproducing-analysis.md) for provenance, analysis, and reproduction steps.
